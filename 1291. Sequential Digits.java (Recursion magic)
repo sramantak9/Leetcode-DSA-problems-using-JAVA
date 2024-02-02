@@ -1,0 +1,29 @@
+class Solution {
+    public List<Integer> sequentialDigits(int low, int high) {
+        List<Integer>l=new ArrayList<>();
+        for(int i=1;i<=9;i++)
+        {
+            recur(low,high,l,0,i);
+        }
+       Collections.sort(l);
+        return l;
+    }
+    public void recur(int low, int high, List<Integer>l,int num,int p)
+    {
+        if(num>high)
+        {
+            return;
+        }
+        if(num>=low && num<=high)
+        {
+            l.add(num);
+        }
+        if(p==10)
+        {
+            return;
+        }
+            
+         recur(low,high,l,(num*10)+p,p+1);
+        
+    }
+}
