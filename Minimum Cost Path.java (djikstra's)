@@ -1,0 +1,54 @@
+
+class tuple
+{
+    int dist;
+    int r;
+    int c;
+    tuple(int dist, int r, int c)
+    {
+        this.dist=dist;
+        this.r=r;
+        this.c=c;
+    }
+}
+class Solution
+{
+    //Function to return the minimum cost to react at bottom
+	//right cell from top left cell.
+    public int minimumCostPath(int[][] grid)
+    {
+        int n=grid.length;
+        int distance[][]=new int[n][n];
+        for(int row[]:distance)
+        {
+            Arrays.fill(row,(int)1e9);
+        }
+        distance[0][0]=grid[0][0];
+        PriorityQueue<tuple>pq=new PriorityQueue<>((x,y) -> x.dist - y.dist);
+        pq.add(new tuple(distance[0][0],0,0));
+        while(pq.isEmpty()==false)
+        {
+            tuple temp=pq.poll();
+            int r=temp.r;
+            int c=temp.c;
+            int dist=temp.dist;
+            int row[]={-1,1,0,0};
+            int col[]={0,0,-1,1};
+            for(int i=0;i<4;i++)
+            {
+                int tr=r+row[i];
+                int tc=c+col[i];
+                if(tr>=0 && tr<n && tc>=0 && tc<n)
+                {
+                    if(grid[tr][tc]+dist<distance[tr][tc])
+                    {
+                        distance[tr][tc]=grid[tr][tc]+dist;
+                        pq.add(new tuple(grid[tr][tc]+dist,tr,tc));
+                    }
+                }
+            }
+        }
+        return distance[n-1][n-1];
+        
+    }
+}
