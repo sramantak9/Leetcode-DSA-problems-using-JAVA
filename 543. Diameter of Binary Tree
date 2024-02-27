@@ -1,0 +1,45 @@
+ class value
+ {
+    int d;
+    int max;
+    value(int d, int max)
+    {
+        this.d=d;
+        this.max=max;
+    }
+ }
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        value tp=getDiameter(root);
+        return tp.max - 1;
+    }
+    public value getDiameter(TreeNode root)
+    {
+        if(root==null)
+        {
+            return new value(0,0);
+        }
+        value lt=getDiameter(root.left);
+        value rt=getDiameter(root.right);
+        int Ldist=lt.d;
+        int Rdist=rt.d;
+        int Lmax=lt.max;
+        int Rmax=rt.max;
+        int curr=Ldist+Rdist;
+        int maxi=Math.max(Math.max(Ldist,Rdist),curr);
+        maxi+=1;
+        maxi=Math.max(Math.max(Lmax,Rmax),maxi);
+        int val=0;
+        if(Ldist>Rdist)
+        {
+            val=Ldist+1;
+        }
+        else
+        {
+            val=Rdist+1;
+        }
+        return new value(val,maxi);
+
+
+    }
+}
