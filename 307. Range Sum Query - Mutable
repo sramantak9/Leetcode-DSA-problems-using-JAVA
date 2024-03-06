@@ -1,0 +1,81 @@
+class SegmentTree {
+	int seg[];
+	int n;
+    int low;
+    int high;
+
+	SegmentTree(int n,int low, int high) {
+		this.n = n;
+		seg = new int[4 * n];
+        this.low=low;
+        this.high=high;
+	}
+
+	void Build(int ind, int low, int high, int arr[]) {
+		if (low == high) {
+			seg[ind] = arr[low];
+			return;
+		}
+
+		int mid = (low + high) / 2;
+
+		Build(2 * ind + 1, low, mid, arr); // left call
+		Build(2 * ind + 2, mid + 1, high, arr); // right call
+
+		seg[ind] = (seg[2 * ind + 1] + seg[2 * ind + 2]);
+
+	}
+
+	int Query(int ind, int low, int high,int l, int r) // temlate Query written to get minimum
+	{
+		if (low > r || high < l) // No overlap
+		{
+			return 0;
+		} else if (low >= l && high <= r) // complete overlap
+		{
+			return seg[ind];
+		}
+		// partial overlap down below
+		int mid = (low + high) / 2;
+		int left = Query(2 * ind + 1, low, mid, l, r);
+		int right = Query(2 * ind + 2, mid + 1, high, l, r);
+		return left+right;
+
+	}
+
+	void pointUpdate(int ind,int low, int high,int i, int val) {
+		if (low == high) // because update will always happen on a single index, and the way we search
+							// finally low=high=i
+		{
+			seg[ind] = val;
+			return;
+		}
+		int mid = (low + high) / 2;
+		if (i <= mid) // that means if i>=low && i<=mid
+		{
+			pointUpdate(2 * ind + 1, low, mid, i, val);
+		} else {
+			pointUpdate(2 * ind + 2, mid + 1, high, i, val);
+		}
+
+		seg[ind] =(seg[2 * ind + 1]+ seg[2 * ind + 2]);
+	}
+}
+class NumArray {
+    SegmentTree st;
+    int n;
+    public NumArray(int[] nums) {
+        st=new SegmentTree(nums.length,0,nums.length-1);
+        n=nums.length;
+        st.Build(0,0,n-1,nums);
+    }
+    
+    public void update(int index, int val) {
+        st.pointUpdate(0,0,n-1,index,val);
+    }
+    
+    public int sumRange(int left, int right) {
+        
+        return st.Query(0,0,n-1,left,right);
+    }
+}
